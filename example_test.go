@@ -5,7 +5,7 @@ import (
 )
 
 func ExampleNew() {
-	b := bytesize.New(1024)
+	b := New(1024)
 	fmt.Printf("%s", b)
 
 	// Output:
