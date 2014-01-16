@@ -13,4 +13,5 @@ representation of the result.
 Usage
 -----
 
-Check out the tests.
+Check the built in documentation for examples using the godoc link above or by
+running godoc locally. 
