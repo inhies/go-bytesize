@@ -17,7 +17,7 @@ func ExampleNew_math() {
 	b1 := bytesize.New(1024)
 	b2 := bytesize.New(4096)
 	sum := b1 + b2
-	fmt.Printf("%s", total)
+	fmt.Printf("%s", sum)
 
 	// Output:
 	// 5.00KB
