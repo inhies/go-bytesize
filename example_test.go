@@ -1,11 +1,12 @@
-package bytesize
+package bytesize_test
 
 import (
 	"fmt"
+	"github.com/inhies/go-bytesize"
 )
 
 func ExampleNew() {
-	b := New(1024)
+	b := bytesize.New(1024)
 	fmt.Printf("%s", b)
 
 	// Output:
@@ -13,7 +14,7 @@ func ExampleNew() {
 }
 
 func ExampleParse() {
-	b, _ := Parse("1024 GB")
+	b, _ := bytesize.Parse("1024 GB")
 	fmt.Printf("%s", b)
 
 	// Output:
