@@ -36,6 +36,44 @@ func Test_New(t *testing.T) {
 	}
 }
 
+var formatTable = []struct {
+	Bytes  float64
+	Result string
+}{
+	{1, "1 byte"},
+	{1023, "1023 bytes"},
+	{1024, "1 kilobyte"},
+	{1048576, "1 megabyte"},
+	{1073741824, "1 gigabyte"},
+	{1099511627776, "1 terabyte"},
+	{1125899906842624, "1 petabyte"},
+	{1152921504606846976, "1 exabyte"},
+	{1180591620717411303424, "1 zettabyte"},
+	{1208925819614629174706176, "1 yottabyte"},
+	{2 * 1, "2 bytes"},
+	{2 * 1024, "2 kilobytes"},
+	{2 * 1048576, "2 megabytes"},
+	{2 * 1073741824, "2 gigabytes"},
+	{2 * 1099511627776, "2 terabytes"},
+	{2 * 1125899906842624, "2 petabytes"},
+	{2 * 1152921504606846976, "2 exabytes"},
+	{2 * 1180591620717411303424, "2 zettabytes"},
+	{2 * 1208925819614629174706176, "2 yottabytes"},
+}
+
+func Test_Formatting(t *testing.T) {
+	Format = "%.0f "
+	LongUnits = true
+	for _, v := range formatTable {
+		b := New(v.Bytes)
+		if b.String() != v.Result {
+			t.Fatalf("Expected %s, received %s", v.Result, b)
+		}
+	}
+	Format = "%.2f"
+	LongUnits = false
+}
+
 var parseTable = []struct {
 	Input  string
 	Result string
