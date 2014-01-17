@@ -5,17 +5,24 @@ import (
 )
 
 var newTable = []struct {
-	Bytes  int64
+	Bytes  float64
 	Result string
 }{
 	{1, "1.00B"},
 	{1023, "1023.00B"},
 	{1024, "1.00KB"},
+	{1048576, "1.00MB"},
+	{1073741824, "1.00GB"},
+	{1099511627776, "1.00TB"},
+	{1125899906842624, "1.00PB"},
+	{1152921504606846976, "1.00EB"},
+	{1180591620717411303424, "1.00ZB"},
+	{1208925819614629174706176, "1.00YB"},
 }
 
 func Test_New(t *testing.T) {
 	for _, v := range newTable {
-		b := New(float64(v.Bytes))
+		b := New(v.Bytes)
 		if b.String() != v.Result {
 			t.Fatalf("Expected %s, received %s", v.Result, b)
 		}
