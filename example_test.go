@@ -25,8 +25,17 @@ func ExampleNew_math() {
 
 func ExampleParse() {
 	b, _ := bytesize.Parse("1024 GB")
-	fmt.Printf("%s", b)
+	fmt.Printf("%s\n", b)
+
+	b, _ = bytesize.Parse("3 petabytes")
+	fmt.Printf("%s\n", b)
+
+	bytesize.LongUnits = true
+	bytesize.Format = "%.0f "
+	fmt.Printf("%s\n", b)
 
 	// Output:
 	// 1.00TB
+	// 3.00PB
+	// 3 petabytes
 }
