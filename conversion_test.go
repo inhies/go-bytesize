@@ -11,6 +11,24 @@ func Test_Overflow(t *testing.T) {
 	}
 }
 
+var formatTable = []struct {
+	Bytes  float64
+	Result string
+}{
+	{1, "1 byte"},
+	{1024, "1 kilobyte"},
+}
+
+func Test_Format(t *testing.T) {
+	for _, v := range formatTable {
+		bSize := New(v.Bytes)
+		b := bSize.Format("%.0f ", true)
+		if b != v.Result {
+			t.Fatalf("Expected %s, received %s", v.Result, b)
+		}
+	}
+}
+
 var newTable = []struct {
 	Bytes  float64
 	Result string
@@ -36,7 +54,7 @@ func Test_New(t *testing.T) {
 	}
 }
 
-var formatTable = []struct {
+var globalFormatTable = []struct {
 	Bytes  float64
 	Result string
 }{
@@ -61,10 +79,10 @@ var formatTable = []struct {
 	{2 * 1208925819614629174706176, "2 yottabytes"},
 }
 
-func Test_Formatting(t *testing.T) {
+func Test_GlobalFormat(t *testing.T) {
 	Format = "%.0f "
 	LongUnits = true
-	for _, v := range formatTable {
+	for _, v := range globalFormatTable {
 		b := New(v.Bytes)
 		if b.String() != v.Result {
 			t.Fatalf("Expected %s, received %s", v.Result, b)

@@ -128,97 +128,106 @@ func New(s float64) ByteSize {
 	return ByteSize(s)
 }
 
-// String returns the string form of byte size with the prefix, such as
-// "2.00MB".
+// Returns a string representation of b with the specified formatting and units.
+func (b ByteSize) Format(format string, longUnits bool) string {
+	return b.format(format, longUnits)
+}
+
+// String returns the string form of b using the package global Format and
+// LongUnits options.
 func (b ByteSize) String() string {
+	return b.format(Format, LongUnits)
+}
+
+func (b ByteSize) format(format string, longUnits bool) string {
 	switch {
 	case b >= YB:
-		if LongUnits {
+		if longUnits {
 			var s string
-			value := fmt.Sprintf(Format, b/YB)
+			value := fmt.Sprintf(format, b/YB)
 			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(Format+"yottabyte"+s, b/YB)
+			return fmt.Sprintf(format+"yottabyte"+s, b/YB)
 		}
-		return fmt.Sprintf(Format+"YB", b/YB)
+		return fmt.Sprintf(format+"YB", b/YB)
 	case b >= ZB:
-		if LongUnits {
+		if longUnits {
 			var s string
-			value := fmt.Sprintf(Format, b/ZB)
+			value := fmt.Sprintf(format, b/ZB)
 			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(Format+"zettabyte"+s, b/ZB)
+			return fmt.Sprintf(format+"zettabyte"+s, b/ZB)
 		}
-		return fmt.Sprintf(Format+"ZB", b/ZB)
+		return fmt.Sprintf(format+"ZB", b/ZB)
 	case b >= EB:
-		if LongUnits {
+		if longUnits {
 			var s string
-			value := fmt.Sprintf(Format, b/EB)
+			value := fmt.Sprintf(format, b/EB)
 			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(Format+"exabyte"+s, b/EB)
+			return fmt.Sprintf(format+"exabyte"+s, b/EB)
 		}
-		return fmt.Sprintf(Format+"EB", b/EB)
+		return fmt.Sprintf(format+"EB", b/EB)
 	case b >= PB:
-		if LongUnits {
+		if longUnits {
 			var s string
-			value := fmt.Sprintf(Format, b/PB)
+			value := fmt.Sprintf(format, b/PB)
 			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(Format+"petabyte"+s, b/PB)
+			return fmt.Sprintf(format+"petabyte"+s, b/PB)
 		}
-		return fmt.Sprintf(Format+"PB", b/PB)
+		return fmt.Sprintf(format+"PB", b/PB)
 	case b >= TB:
-		if LongUnits {
+		if longUnits {
 			var s string
-			value := fmt.Sprintf(Format, b/TB)
+			value := fmt.Sprintf(format, b/TB)
 			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(Format+"terabyte"+s, b/TB)
+			return fmt.Sprintf(format+"terabyte"+s, b/TB)
 		}
-		return fmt.Sprintf(Format+"TB", b/TB)
+		return fmt.Sprintf(format+"TB", b/TB)
 	case b >= GB:
-		if LongUnits {
+		if longUnits {
 			var s string
-			value := fmt.Sprintf(Format, b/GB)
+			value := fmt.Sprintf(format, b/GB)
 			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(Format+"gigabyte"+s, b/GB)
+			return fmt.Sprintf(format+"gigabyte"+s, b/GB)
 		}
-		return fmt.Sprintf(Format+"GB", b/GB)
+		return fmt.Sprintf(format+"GB", b/GB)
 	case b >= MB:
-		if LongUnits {
+		if longUnits {
 			var s string
-			value := fmt.Sprintf(Format, b/MB)
+			value := fmt.Sprintf(format, b/MB)
 			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(Format+"megabyte"+s, b/MB)
+			return fmt.Sprintf(format+"megabyte"+s, b/MB)
 		}
-		return fmt.Sprintf(Format+"MB", b/MB)
+		return fmt.Sprintf(format+"MB", b/MB)
 	case b >= KB:
-		if LongUnits {
+		if longUnits {
 			var s string
-			value := fmt.Sprintf(Format, b/KB)
+			value := fmt.Sprintf(format, b/KB)
 			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(Format+"kilobyte"+s, b/KB)
+			return fmt.Sprintf(format+"kilobyte"+s, b/KB)
 		}
-		return fmt.Sprintf(Format+"KB", b/KB)
+		return fmt.Sprintf(format+"KB", b/KB)
 	}
-	if LongUnits {
+	if longUnits {
 		var s string
 		if b > 1 {
 			s = "s"
 		}
-		return fmt.Sprintf(Format+"byte"+s, b)
+		return fmt.Sprintf(format+"byte"+s, b)
 	}
-	return fmt.Sprintf(Format+"B", b)
+	return fmt.Sprintf(format+"B", b)
 }
