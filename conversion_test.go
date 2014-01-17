@@ -32,22 +32,26 @@ func Test_New(t *testing.T) {
 var parseTable = []struct {
 	Input  string
 	Result string
+	Fail   bool
 }{
-	{"1B", "1.00B"},
-	{"1 B", "1.00B"},
-	{"1B ", "1.00B"},
-	{" 1 B ", "1.00B"},
-	{"1023B", "1023.00B"},
-	{"1024B", "1.00KB"},
+	{"1B", "1.00B", false},
+	{"1 B", "1.00B", false},
+	{"1B ", "1.00B", false},
+	{" 1 B ", "1.00B", false},
+	{"1023B", "1023.00B", false},
+	{"1024B", "1.00KB", false},
+	{"1KB 1023B", "", true},
+	{"1gigabits", "", true},
+	{"1.e0GB", "", true},
 }
 
 func Test_Parse(t *testing.T) {
 	for _, v := range parseTable {
 		b, err := Parse(v.Input)
-		if err != nil {
+		if err != nil && !v.Fail {
 			t.Fatal(err)
 		}
-		if b.String() != v.Result {
+		if b.String() != v.Result && !v.Fail {
 			t.Fatalf("Expected %s, received %s", v.Result, b)
 		}
 	}
