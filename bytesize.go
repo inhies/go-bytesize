@@ -38,15 +38,41 @@ const (
 )
 
 var unitMap = map[string]float64{
-	"B":  float64(B),
-	"KB": float64(KB),
-	"MB": float64(MB),
-	"GB": float64(GB),
-	"TB": float64(TB),
-	"PB": float64(PB),
-	"EB": float64(EB),
-	"ZB": float64(ZB),
-	"YB": float64(YB),
+	"B":     float64(B),
+	"BYTE":  float64(B),
+	"BYTES": float64(B),
+
+	"KB":        float64(KB),
+	"KILOBYTE":  float64(KB),
+	"KILOBYTES": float64(KB),
+
+	"MB":        float64(MB),
+	"MEGABYTE":  float64(MB),
+	"MEGABYTES": float64(MB),
+
+	"GB":        float64(GB),
+	"GIGABYTE":  float64(GB),
+	"GIGABYTES": float64(GB),
+
+	"TB":        float64(TB),
+	"TERABYTE":  float64(TB),
+	"TERABYTES": float64(TB),
+
+	"PB":        float64(PB),
+	"PETABYTE":  float64(PB),
+	"PETABYTES": float64(PB),
+
+	"EB":       float64(EB),
+	"EXABYTE":  float64(EB),
+	"EXABYTES": float64(EB),
+
+	"ZB":         float64(ZB),
+	"ZETTABYTE":  float64(ZB),
+	"ZETTABYTES": float64(ZB),
+
+	"YB":         float64(YB),
+	"YOTTABYTE":  float64(YB),
+	"YOTTABYTES": float64(YB),
 }
 
 var (
@@ -80,9 +106,11 @@ func Parse(s string) (ByteSize, error) {
 		return 0, errors.New("Unrecognized size suffix")
 	}
 
+	// Check for MB, MEGABYTE, and MEGABYTES
 	unit, ok := unitMap[strings.ToUpper(split[1])]
 	if !ok {
 		return 0, errors.New("Unrecognized size suffix " + split[1])
+
 	}
 
 	value, err := strconv.ParseFloat(split[0], 64)

@@ -81,6 +81,8 @@ var parseTable = []struct {
 }{
 	{"1B", "1.00B", false},
 	{"1 B", "1.00B", false},
+	{"1 byte", "1.00B", false},
+	{"2 bytes", "2.00B", false},
 	{"1B ", "1.00B", false},
 	{" 1 B ", "1.00B", false},
 	{"1023B", "1023.00B", false},
