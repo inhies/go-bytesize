@@ -13,6 +13,16 @@ func ExampleNew() {
 	// 1.00KB
 }
 
+func ExampleFormat() {
+	b := bytesize.New(1024)
+	fmt.Printf("%s\n", b)
+	fmt.Printf("%s\n", b.Format("%.8f ", true))
+
+	// Output:
+	// 1.00KB
+	// 1.00000000 kilobyte
+}
+
 func ExampleNew_math() {
 	b1 := bytesize.New(1024)
 	b2 := bytesize.New(4096)
