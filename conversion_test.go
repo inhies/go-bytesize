@@ -41,8 +41,7 @@ var parseTable = []struct {
 	{"1023B", "1023.00B", false},
 	{"1024B", "1.00KB", false},
 	{"1KB 1023B", "", true},
-	{"1gigabits", "", true},
-	{"1.e0GB", "", true},
+	{"1", "", true},
 }
 
 func Test_Parse(t *testing.T) {
