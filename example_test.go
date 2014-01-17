@@ -13,7 +13,7 @@ func ExampleNew() {
 	// 1.00KB
 }
 
-func ExampleFormat() {
+func ExampleByteSize_Format() {
 	b := bytesize.New(1024)
 	fmt.Printf("%s\n", b)
 	fmt.Printf("%s\n", b.Format("%.8f ", true))
