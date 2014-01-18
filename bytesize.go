@@ -1,8 +1,8 @@
-// Package bytesize provides functionality for measuring and displaying byte
+// Package bytesize provides functionality for measuring and formatting  byte
 // sizes.
 //
-// You can perfom mathmatical operation with ByteSize's and the result will be
-// a valid ByteSize with the correct size suffix. See the tests for examples.
+// You can also perfom mathmatical operation with ByteSize's and the result
+// will be a valid ByteSize with the correct size suffix.
 package bytesize
 
 import (
@@ -13,13 +13,13 @@ import (
 	"unicode"
 )
 
-// This code was originall based on http://golang.org/doc/progs/eff_bytesize.go
+// This code was originally based on http://golang.org/doc/progs/eff_bytesize.go
+//
 // Since then many improvements have been made. The following is the original
 // copyright notice:
 
-// Copyright 2009 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// Copyright 2009 The Go Authors. All rights reserved. Use of this source code
+// is governed by a BSD-style license that can be found in the LICENSE file.
 
 // ByteSize represents a number of bytes
 type ByteSize float64
@@ -113,7 +113,8 @@ var (
 
 // Parse parses a byte size string. A byte size string is a number followed by
 // a unit suffix, such as "1024B" or "1 MB". Valid byte units are "B", "KB",
-// "MB", "GB", "TB", "PB", "EB", "ZB", and "YB".
+// "MB", "GB", "TB", "PB", "EB", "ZB", and "YB". You can also use the long
+// format of units, such as "kilobyte" or "kilobytes".
 func Parse(s string) (ByteSize, error) {
 	// Remove leading and trailing whitespace
 	s = strings.TrimSpace(s)
