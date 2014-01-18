@@ -13,16 +13,19 @@ func Test_Overflow(t *testing.T) {
 
 var formatTable = []struct {
 	Bytes  float64
+	Format string
 	Result string
 }{
-	{1, "1 byte"},
-	{1024, "1 kilobyte"},
+	{1, "byte", "1 B"},
+	{1024, "kb", "1 KB"},
+	{1099511627776, "GB", "1024 GB"},
+	{1125899906842624, "GB", "1048576 GB"},
 }
 
 func Test_Format(t *testing.T) {
 	for _, v := range formatTable {
 		bSize := New(v.Bytes)
-		b := bSize.Format("%.0f ", true)
+		b := bSize.Format("%.0f ", v.Format, false)
 		if b != v.Result {
 			t.Fatalf("Expected %s, received %s", v.Result, b)
 		}

@@ -37,42 +37,69 @@ const (
 	YB
 )
 
-var unitMap = map[string]float64{
-	"B":     float64(B),
-	"BYTE":  float64(B),
-	"BYTES": float64(B),
+// Used for returning long unit form of string representation.
+var longUnitMap = map[ByteSize]string{
+	B:  "byte",
+	KB: "kilobyte",
+	MB: "megabyte",
+	GB: "gigabyte",
+	TB: "terabyte",
+	PB: "petabyte",
+	EB: "exabyte",
+	ZB: "zettabyte",
+	YB: "yottabyte",
+}
 
-	"KB":        float64(KB),
-	"KILOBYTE":  float64(KB),
-	"KILOBYTES": float64(KB),
+// Used for returning string representation.
+var shortUnitMap = map[ByteSize]string{
+	B:  "B",
+	KB: "KB",
+	MB: "MB",
+	GB: "GB",
+	TB: "TB",
+	PB: "PB",
+	EB: "EB",
+	ZB: "ZB",
+	YB: "YB",
+}
 
-	"MB":        float64(MB),
-	"MEGABYTE":  float64(MB),
-	"MEGABYTES": float64(MB),
+// Used to convert user input to ByteSize
+var unitMap = map[string]ByteSize{
+	"B":     B,
+	"BYTE":  B,
+	"BYTES": B,
 
-	"GB":        float64(GB),
-	"GIGABYTE":  float64(GB),
-	"GIGABYTES": float64(GB),
+	"KB":        KB,
+	"KILOBYTE":  KB,
+	"KILOBYTES": KB,
 
-	"TB":        float64(TB),
-	"TERABYTE":  float64(TB),
-	"TERABYTES": float64(TB),
+	"MB":        MB,
+	"MEGABYTE":  MB,
+	"MEGABYTES": MB,
 
-	"PB":        float64(PB),
-	"PETABYTE":  float64(PB),
-	"PETABYTES": float64(PB),
+	"GB":        GB,
+	"GIGABYTE":  GB,
+	"GIGABYTES": GB,
 
-	"EB":       float64(EB),
-	"EXABYTE":  float64(EB),
-	"EXABYTES": float64(EB),
+	"TB":        TB,
+	"TERABYTE":  TB,
+	"TERABYTES": TB,
 
-	"ZB":         float64(ZB),
-	"ZETTABYTE":  float64(ZB),
-	"ZETTABYTES": float64(ZB),
+	"PB":        PB,
+	"PETABYTE":  PB,
+	"PETABYTES": PB,
 
-	"YB":         float64(YB),
-	"YOTTABYTE":  float64(YB),
-	"YOTTABYTES": float64(YB),
+	"EB":       EB,
+	"EXABYTE":  EB,
+	"EXABYTES": EB,
+
+	"ZB":         ZB,
+	"ZETTABYTE":  ZB,
+	"ZETTABYTES": ZB,
+
+	"YB":         YB,
+	"YOTTABYTE":  YB,
+	"YOTTABYTES": YB,
 }
 
 var (
@@ -118,7 +145,7 @@ func Parse(s string) (ByteSize, error) {
 		return 0, err
 	}
 
-	bytesize := ByteSize(value * unit)
+	bytesize := ByteSize(value * float64(unit))
 	return bytesize, nil
 
 }
@@ -129,105 +156,121 @@ func New(s float64) ByteSize {
 }
 
 // Returns a string representation of b with the specified formatting and units.
-func (b ByteSize) Format(format string, longUnits bool) string {
-	return b.format(format, longUnits)
+func (b ByteSize) Format(format string, unit string, longUnits bool) string {
+	return b.format(format, unit, longUnits)
 }
 
 // String returns the string form of b using the package global Format and
 // LongUnits options.
 func (b ByteSize) String() string {
-	return b.format(Format, LongUnits)
+	return b.format(Format, "", LongUnits)
 }
 
-func (b ByteSize) format(format string, longUnits bool) string {
-	switch {
-	case b >= YB:
+func (b ByteSize) format(format string, unit string, longUnits bool) string {
+	if unit != "" {
+		u, ok := unitMap[strings.ToUpper(unit)]
+		if !ok {
+			return "Unrecognized unit: " + unit
+		}
 		if longUnits {
 			var s string
-			value := fmt.Sprintf(format, b/YB)
-			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
+			value := fmt.Sprintf(format, b/ByteSize(u))
+			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(format+"yottabyte"+s, b/YB)
+			return fmt.Sprintf(format+longUnitMap[u]+s, b/u)
 		}
-		return fmt.Sprintf(format+"YB", b/YB)
-	case b >= ZB:
+		return fmt.Sprintf(format+shortUnitMap[u], b/u)
+	} else {
+		switch {
+		case b >= YB:
+			if longUnits {
+				var s string
+				value := fmt.Sprintf(format, b/YB)
+				if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
+					s = "s"
+				}
+				return fmt.Sprintf(format+"yottabyte"+s, b/YB)
+			}
+			return fmt.Sprintf(format+"YB", b/YB)
+		case b >= ZB:
+			if longUnits {
+				var s string
+				value := fmt.Sprintf(format, b/ZB)
+				if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
+					s = "s"
+				}
+				return fmt.Sprintf(format+"zettabyte"+s, b/ZB)
+			}
+			return fmt.Sprintf(format+"ZB", b/ZB)
+		case b >= EB:
+			if longUnits {
+				var s string
+				value := fmt.Sprintf(format, b/EB)
+				if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
+					s = "s"
+				}
+				return fmt.Sprintf(format+"exabyte"+s, b/EB)
+			}
+			return fmt.Sprintf(format+"EB", b/EB)
+		case b >= PB:
+			if longUnits {
+				var s string
+				value := fmt.Sprintf(format, b/PB)
+				if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
+					s = "s"
+				}
+				return fmt.Sprintf(format+"petabyte"+s, b/PB)
+			}
+			return fmt.Sprintf(format+"PB", b/PB)
+		case b >= TB:
+			if longUnits {
+				var s string
+				value := fmt.Sprintf(format, b/TB)
+				if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
+					s = "s"
+				}
+				return fmt.Sprintf(format+"terabyte"+s, b/TB)
+			}
+			return fmt.Sprintf(format+"TB", b/TB)
+		case b >= GB:
+			if longUnits {
+				var s string
+				value := fmt.Sprintf(format, b/GB)
+				if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
+					s = "s"
+				}
+				return fmt.Sprintf(format+"gigabyte"+s, b/GB)
+			}
+			return fmt.Sprintf(format+"GB", b/GB)
+		case b >= MB:
+			if longUnits {
+				var s string
+				value := fmt.Sprintf(format, b/MB)
+				if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
+					s = "s"
+				}
+				return fmt.Sprintf(format+"megabyte"+s, b/MB)
+			}
+			return fmt.Sprintf(format+"MB", b/MB)
+		case b >= KB:
+			if longUnits {
+				var s string
+				value := fmt.Sprintf(format, b/KB)
+				if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
+					s = "s"
+				}
+				return fmt.Sprintf(format+"kilobyte"+s, b/KB)
+			}
+			return fmt.Sprintf(format+"KB", b/KB)
+		}
 		if longUnits {
 			var s string
-			value := fmt.Sprintf(format, b/ZB)
-			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
+			if b > 0 && b != 1 {
 				s = "s"
 			}
-			return fmt.Sprintf(format+"zettabyte"+s, b/ZB)
+			return fmt.Sprintf(format+"byte"+s, b)
 		}
-		return fmt.Sprintf(format+"ZB", b/ZB)
-	case b >= EB:
-		if longUnits {
-			var s string
-			value := fmt.Sprintf(format, b/EB)
-			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
-				s = "s"
-			}
-			return fmt.Sprintf(format+"exabyte"+s, b/EB)
-		}
-		return fmt.Sprintf(format+"EB", b/EB)
-	case b >= PB:
-		if longUnits {
-			var s string
-			value := fmt.Sprintf(format, b/PB)
-			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
-				s = "s"
-			}
-			return fmt.Sprintf(format+"petabyte"+s, b/PB)
-		}
-		return fmt.Sprintf(format+"PB", b/PB)
-	case b >= TB:
-		if longUnits {
-			var s string
-			value := fmt.Sprintf(format, b/TB)
-			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
-				s = "s"
-			}
-			return fmt.Sprintf(format+"terabyte"+s, b/TB)
-		}
-		return fmt.Sprintf(format+"TB", b/TB)
-	case b >= GB:
-		if longUnits {
-			var s string
-			value := fmt.Sprintf(format, b/GB)
-			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
-				s = "s"
-			}
-			return fmt.Sprintf(format+"gigabyte"+s, b/GB)
-		}
-		return fmt.Sprintf(format+"GB", b/GB)
-	case b >= MB:
-		if longUnits {
-			var s string
-			value := fmt.Sprintf(format, b/MB)
-			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
-				s = "s"
-			}
-			return fmt.Sprintf(format+"megabyte"+s, b/MB)
-		}
-		return fmt.Sprintf(format+"MB", b/MB)
-	case b >= KB:
-		if longUnits {
-			var s string
-			value := fmt.Sprintf(format, b/KB)
-			if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 1 {
-				s = "s"
-			}
-			return fmt.Sprintf(format+"kilobyte"+s, b/KB)
-		}
-		return fmt.Sprintf(format+"KB", b/KB)
+		return fmt.Sprintf(format+"B", b)
 	}
-	if longUnits {
-		var s string
-		if b > 1 {
-			s = "s"
-		}
-		return fmt.Sprintf(format+"byte"+s, b)
-	}
-	return fmt.Sprintf(format+"B", b)
 }
