@@ -113,6 +113,18 @@ var parseTable = []struct {
 	{"1", "", true},
 }
 
+func Test_Parse(t *testing.T) {
+	for _, v := range parseTable {
+		b, err := Parse(v.Input)
+		if err != nil && !v.Fail {
+			t.Fatal(err)
+		}
+		if b.String() != v.Result && !v.Fail {
+			t.Fatalf("Expected %s, received %s", v.Result, b)
+		}
+	}
+}
+
 func Test_Set(t *testing.T) {
 	for _, v := range parseTable {
 		var b ByteSize
@@ -126,14 +138,23 @@ func Test_Set(t *testing.T) {
 		}
 	}
 }
-func Test_Parse(t *testing.T) {
-	for _, v := range parseTable {
+
+var getTable = []struct {
+	Input  string
+	Result ByteSize
+}{
+	{"1 byte", 1 * B},
+}
+
+func Test_Get(t *testing.T) {
+	for _, v := range getTable {
 		b, err := Parse(v.Input)
-		if err != nil && !v.Fail {
+		if err != nil {
 			t.Fatal(err)
 		}
-		if b.String() != v.Result && !v.Fail {
-			t.Fatalf("Expected %s, received %s", v.Result, b)
+		get := b.Get()
+		if get != v.Result {
+			t.Fatalf("Expected %s, received %s", v.Result, get)
 		}
 	}
 }

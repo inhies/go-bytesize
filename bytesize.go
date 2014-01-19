@@ -151,8 +151,7 @@ func Parse(s string) (ByteSize, error) {
 
 }
 
-// Set sets b to the value of s. This is included for compatibility with
-// github.com/spf13/pflag
+// Satisfy the flag package  Value interface.
 func (b *ByteSize) Set(s string) error {
 	bs, err := Parse(s)
 	if err != nil {
@@ -161,6 +160,9 @@ func (b *ByteSize) Set(s string) error {
 	*b = bs
 	return nil
 }
+
+// Satisfy the flag package Getter interface.
+func (b *ByteSize) Get() interface{} { return ByteSize(*b) }
 
 // New returns a new ByteSize type set to s.
 func New(s float64) ByteSize {
