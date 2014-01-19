@@ -20,6 +20,7 @@ var formatTable = []struct {
 	{1024, "kb", "1 KB"},
 	{1099511627776, "GB", "1024 GB"},
 	{1125899906842624, "GB", "1048576 GB"},
+	{1125899906842624, "potato", "Unrecognized unit: potato"},
 }
 
 func Test_Format(t *testing.T) {
