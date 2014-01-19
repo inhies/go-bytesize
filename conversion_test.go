@@ -112,6 +112,19 @@ var parseTable = []struct {
 	{"1", "", true},
 }
 
+func Test_Set(t *testing.T) {
+	for _, v := range parseTable {
+		var b ByteSize
+		var err error
+		err = b.Set(v.Input)
+		if err != nil && !v.Fail {
+			t.Fatal(err)
+		}
+		if b.String() != v.Result && !v.Fail {
+			t.Fatalf("Expected %s, received %s", v.Result, b)
+		}
+	}
+}
 func Test_Parse(t *testing.T) {
 	for _, v := range parseTable {
 		b, err := Parse(v.Input)
