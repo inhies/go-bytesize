@@ -22,7 +22,7 @@ import (
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 // ByteSize represents a number of bytes
-type ByteSize float64
+type ByteSize uint64
 
 // Byte size size suffixes.
 const (
@@ -33,8 +33,6 @@ const (
 	TB
 	PB
 	EB
-	ZB
-	YB
 )
 
 // Used for returning long unit form of string representation.
@@ -46,8 +44,6 @@ var longUnitMap = map[ByteSize]string{
 	TB: "terabyte",
 	PB: "petabyte",
 	EB: "exabyte",
-	ZB: "zettabyte",
-	YB: "yottabyte",
 }
 
 // Used for returning string representation.
@@ -59,8 +55,6 @@ var shortUnitMap = map[ByteSize]string{
 	TB: "TB",
 	PB: "PB",
 	EB: "EB",
-	ZB: "ZB",
-	YB: "YB",
 }
 
 // Used to convert user input to ByteSize
@@ -92,14 +86,6 @@ var unitMap = map[string]ByteSize{
 	"EB":       EB,
 	"EXABYTE":  EB,
 	"EXABYTES": EB,
-
-	"ZB":         ZB,
-	"ZETTABYTE":  ZB,
-	"ZETTABYTES": ZB,
-
-	"YB":         YB,
-	"YOTTABYTE":  YB,
-	"YOTTABYTES": YB,
 }
 
 var (
@@ -113,7 +99,7 @@ var (
 
 // Parse parses a byte size string. A byte size string is a number followed by
 // a unit suffix, such as "1024B" or "1 MB". Valid byte units are "B", "KB",
-// "MB", "GB", "TB", "PB", "EB", "ZB", and "YB". You can also use the long
+// "MB", "GB", "TB", "PB" and "EB". You can also use the long
 // format of units, such as "kilobyte" or "kilobytes".
 func Parse(s string) (ByteSize, error) {
 	// Remove leading and trailing whitespace
@@ -190,10 +176,6 @@ func (b ByteSize) format(format string, unit string, longUnits bool) string {
 		}
 	} else {
 		switch {
-		case b >= YB:
-			unitSize = YB
-		case b >= ZB:
-			unitSize = ZB
 		case b >= EB:
 			unitSize = EB
 		case b >= PB:
@@ -213,11 +195,11 @@ func (b ByteSize) format(format string, unit string, longUnits bool) string {
 
 	if longUnits {
 		var s string
-		value := fmt.Sprintf(format, b/unitSize)
+		value := fmt.Sprintf(format, float64(b)/float64(unitSize))
 		if printS, _ := strconv.ParseFloat(strings.TrimSpace(value), 64); printS > 0 && printS != 1 {
 			s = "s"
 		}
-		return fmt.Sprintf(format+longUnitMap[unitSize]+s, b/unitSize)
+		return fmt.Sprintf(format+longUnitMap[unitSize]+s, float64(b)/float64(unitSize))
 	}
-	return fmt.Sprintf(format+shortUnitMap[unitSize], b/unitSize)
+	return fmt.Sprintf(format+shortUnitMap[unitSize], float64(b)/float64(unitSize))
 }

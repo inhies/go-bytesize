@@ -2,7 +2,7 @@ package bytesize_test
 
 import (
 	"fmt"
-	"github.com/inhies/go-bytesize"
+	"github.com/MalteJ/go-bytesize"
 )
 
 func ExampleNew() {

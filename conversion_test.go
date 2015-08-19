@@ -45,8 +45,6 @@ var newTable = []struct {
 	{1099511627776, "1.00TB"},
 	{1125899906842624, "1.00PB"},
 	{1152921504606846976, "1.00EB"},
-	{1180591620717411303424, "1.00ZB"},
-	{1208925819614629174706176, "1.00YB"},
 }
 
 func Test_New(t *testing.T) {
@@ -70,8 +68,6 @@ var globalFormatTable = []struct {
 	{1099511627776, "1 terabyte"},
 	{1125899906842624, "1 petabyte"},
 	{1152921504606846976, "1 exabyte"},
-	{1180591620717411303424, "1 zettabyte"},
-	{1208925819614629174706176, "1 yottabyte"},
 	{2 * 1, "2 bytes"},
 	{2 * 1024, "2 kilobytes"},
 	{2 * 1048576, "2 megabytes"},
@@ -79,8 +75,6 @@ var globalFormatTable = []struct {
 	{2 * 1099511627776, "2 terabytes"},
 	{2 * 1125899906842624, "2 petabytes"},
 	{2 * 1152921504606846976, "2 exabytes"},
-	{2 * 1180591620717411303424, "2 zettabytes"},
-	{2 * 1208925819614629174706176, "2 yottabytes"},
 }
 
 func Test_GlobalFormat(t *testing.T) {
