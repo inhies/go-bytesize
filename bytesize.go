@@ -147,6 +147,11 @@ func (b *ByteSize) Set(s string) error {
 	return nil
 }
 
+// Satisfy the encoding.TextUnmarshaler interface.
+func (b *ByteSize) UnmarshalText(text []byte) error {
+	return b.Set(string(text))
+}
+
 // Satisfy the flag package Getter interface.
 func (b *ByteSize) Get() interface{} { return ByteSize(*b) }
 
