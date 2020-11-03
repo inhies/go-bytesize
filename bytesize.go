@@ -147,6 +147,9 @@ func (b *ByteSize) Set(s string) error {
 	return nil
 }
 
+// Satisfy the pflag package Value interface.
+func (b *ByteSize) Type() string { return "byte_size" }
+
 // Satisfy the encoding.TextUnmarshaler interface.
 func (b *ByteSize) UnmarshalText(text []byte) error {
 	return b.Set(string(text))
