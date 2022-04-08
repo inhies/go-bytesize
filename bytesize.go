@@ -107,7 +107,7 @@ func Parse(s string) (ByteSize, error) {
 
 	split := make([]string, 0)
 	for i, r := range s {
-		if !unicode.IsDigit(r) {
+		if !unicode.IsDigit(r) && r != '.' {
 			// Split the string by digit and size designator, remove whitespace
 			split = append(split, strings.TrimSpace(string(s[:i])))
 			split = append(split, strings.TrimSpace(string(s[i:])))
