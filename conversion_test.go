@@ -104,6 +104,7 @@ var parseTable = []struct {
 	{"1023B", "1023.00B", false},
 	{"1024B", "1.00KB", false},
 	{"1KB 1023B", "", true},
+	{"1.5GB", "1.50GB", false},
 	{"1", "", true},
 }
 
