@@ -8,6 +8,7 @@ package bytesize
 import (
 	"errors"
 	"fmt"
+	"math/big"
 	"strconv"
 	"strings"
 	"unicode"
@@ -127,13 +128,20 @@ func Parse(s string) (ByteSize, error) {
 
 	}
 
-	value, err := strconv.ParseFloat(split[0], 64)
-	if err != nil {
+	if _, err := strconv.ParseFloat(split[0], 64); err != nil {
 		return 0, err
 	}
 
-	bytesize := ByteSize(value * float64(unit))
-	return bytesize, nil
+	value, ok := new(big.Rat).SetString(split[0])
+	if !ok {
+		return 0, errors.New("Invalid size value " + split[0])
+	}
+	value.Mul(value, new(big.Rat).SetInt(new(big.Int).SetUint64(uint64(unit))))
+	bytes := new(big.Int).Quo(value.Num(), value.Denom())
+	if !bytes.IsUint64() {
+		return 0, &strconv.NumError{Func: "Parse", Num: s, Err: strconv.ErrRange}
+	}
+	return ByteSize(bytes.Uint64()), nil
 
 }
 

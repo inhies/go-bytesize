@@ -181,3 +181,36 @@ func Test_Math(t *testing.T) {
 		}
 	}
 }
+
+func TestParseExactByteCounts(t *testing.T) {
+	for _, test := range []struct {
+		input string
+		want  ByteSize
+	}{
+		{"9007199254740993B", 9007199254740993},
+		{"18446744073709551615B", ^ByteSize(0)},
+		{"18446744073709551614.9B", ^ByteSize(0) - 1},
+		{"0.9999999999999999999B", 0},
+		{"1.5KB", 1536},
+		{"1.1KB", 1126},
+		{"010B", 10},
+		{".5KB", 512},
+	} {
+		got, err := Parse(test.input)
+		if err != nil || got != test.want {
+			t.Errorf("Parse(%q) = (%d, %v), want (%d, nil)", test.input, got, err, test.want)
+		}
+	}
+}
+
+func TestParseByteCountOverflow(t *testing.T) {
+	for _, input := range []string{"18446744073709551616B", "16EB", "999999999999999999999999KB"} {
+		if got, err := Parse(input); err == nil || got != 0 {
+			t.Errorf("Parse(%q) = (%d, %v), want zero and an error", input, got, err)
+		}
+		value := ByteSize(42)
+		if err := value.Set(input); err == nil || value != 42 {
+			t.Errorf("Set(%q) changed value to %d or returned no error: %v", input, value, err)
+		}
+	}
+}
